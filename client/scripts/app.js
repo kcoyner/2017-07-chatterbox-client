@@ -47,7 +47,7 @@ app.fetch = function() {
     contentType: 'application/json',
     success: function(data) {
       console.log(data);
-      app.renderRoom(data);
+      app.renderDropDown(data);
       app.renderMessage(data);
     },
     error: function() {
@@ -130,16 +130,23 @@ app.handleSubmit = function() {
   });
 };
 
-app.renderRoom = function(data) {
+app.renderRoom = function(roomName) {
+
+  $('#roomSelect').append('<option>' + roomName + '</option>');
+
+  console.log();
+};
+
+app.renderDropDown = function(data) {
   var roomArray = {};
   for (var i = 0; i < data.results.length; i++) {
     if (!roomArray[data.results[i].roomname]) {
       roomArray[data.results[i].roomname] = data.results[i].roomname;
-      $('#roomSelect').append('<option>' + roomArray[data.results[i].roomname] + '</option>');
+      //$('#roomSelect').append('<option>' + roomArray[data.results[i].roomname] + '</option>');
+      app.renderRoom(data.results[i].roomname);
     }
   }
   console.log(roomArray);
 };
-
 app.init();
 
