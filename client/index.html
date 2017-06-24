@@ -32,13 +32,17 @@
         <h1>chatterbox</h1>
         <!-- Your HTML goes here! -->
         <form name='send' id='send' method='post'>
-            <div>
-                <select name='roomname' id='rooms'>
-                  <option selected>Lobby</option>
-                </select>
+            <div class="clearfix">
+              <div class='roomInput'>
+                Room: <input type='text' name='room' id='room' value='' maxlength='40'>
+              </div>
+              <div>
+                  <select name='roomname' id='roomSelect'></select>
+              </div>
             </div>
+            <br><br>
             <div>
-                <input type='text' name='text' id='message' value='' maxlength='140'>
+                Message: <input type='text' name='text' id='message' value='' maxlength='140'>
             </div>
             <div>
                 <input type='submit' name='submit' class='submit'>
@@ -55,3 +59,4 @@
 </body>
 
 </html>
+

@@ -25,6 +25,7 @@ app.send = function(message) {
     data: JSON.stringify(message),
     contentType: 'application/json',
     success: function(data) {
+      window.location.reload(true);
       console.log('chatterbox: Message sent');
     },
     error: function(data) {
@@ -41,17 +42,13 @@ app.fetch = function() {
     type: 'GET',
     data: where = {
       "order": "-createdAt",
-      "limit": "151"
+      "limit": "25"
     },
     contentType: 'application/json',
     success: function(data) {
       console.log(data);
-      for (var i = 0; i < data.results.length; i++) {
-        $('#chats').append('<div class="chat">' +
-          '<div class="username">' + app.sanitize(data.results[i].username) + '</div>' +
-          '<div id="message">' + app.sanitize(data.results[i].text) + '</div>' +
-          '</div>');
-      }
+      app.renderRoom(data);
+      app.renderMessage(data);
     },
     error: function() {
       // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
@@ -86,8 +83,22 @@ app.clearMessages = function() {
 
 // renderMessage method
 app.renderMessage = function(message) {
-  //$('#chats').append(response);
-  app.send(message);
+  if (Array.isArray(message.results)) {
+    for (var i = 0; i < message.results.length; i++) {
+      $('#chats').append('<div class="chat">' +
+          '<div class="username">' + app.sanitize(message.results[i].username) + '</div>' +
+          '<div id="message">' + app.sanitize(message.results[i].text) + '</div>' +
+      '</div>');
+    }
+  } else {
+    $('#chats').append('<div class="chat">' +
+        '<div class="username">' + app.sanitize(message.username) + '</div>' +
+        '<div id="message">' + app.sanitize(message.text) + '</div>' +
+    '</div>');
+    app.send(message);
+  }
+
+
 };
 
 app.handleSubmit = function() {
@@ -95,7 +106,16 @@ app.handleSubmit = function() {
     e.preventDefault(); // cancel the actual submit
     var username = app.sanitize(window.location.search.replace("?username=", ''));
     var text = app.sanitize($('#message').val());
-    var rooms = app.sanitize($('#rooms').val());
+    var rooms;
+    // check to see if id=room is empty
+    if ($('#room').val()) {
+      rooms = app.sanitize($('#room').val());
+    }
+    else {
+      rooms = $( "select#roomSelect option:checked" ).val();
+    }
+
+    //var rooms = app.sanitize($('#rooms').val());
     console.log(text);
     console.log(rooms);
 
@@ -110,4 +130,16 @@ app.handleSubmit = function() {
   });
 };
 
+app.renderRoom = function(data) {
+  var roomArray = {};
+  for (var i = 0; i < data.results.length; i++) {
+    if (!roomArray[data.results[i].roomname]) {
+      roomArray[data.results[i].roomname] = data.results[i].roomname;
+      $('#roomSelect').append('<option>' + roomArray[data.results[i].roomname] + '</option>');
+    }
+  }
+  console.log(roomArray);
+};
+
 app.init();
+
