@@ -26,11 +26,19 @@
     <div id="main">
       <h1>chatterbox</h1>
       <!-- Your HTML goes here! -->
-      <select id='rooms'></select>
-      <!--<form>
-        <input>
-        <input type='submit'>
-      </form>-->
+      <form name='submitForm' action='#' id='submitForm'>
+        <div>
+          <select name='roomname' id='rooms'>
+            <option selected>Lobby</option>
+          </select>
+        </div>
+        <div>
+          <input type='text' name='text' id='text' value='' maxlength='140'>
+        </div>
+        <div>
+          <input type='submit' name='submit'>
+        </div>
+      </form>
       <br><br>
       <div>
         <button id='clear' type="button">Clear Messages</button>
