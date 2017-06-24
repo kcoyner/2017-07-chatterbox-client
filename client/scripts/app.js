@@ -7,23 +7,7 @@ $(document).ready(function() {
   $('#clear').on('click', function(event) {
     app.clearMessages();
   });
-
-  $('#submitForm').on("submit",function(e) {
-    e.preventDefault(); // cancel the actual submit
-    var username = app.sanitize(window.location.search.replace("?username=", ''));
-    var text = app.sanitize($('#text').val());
-    var rooms = app.sanitize($('#rooms').val());
-
-    var message = {
-      username: username,
-      text: text,
-      roomname: rooms
-    };
-    console.log(message)
-    app.renderMessage(message);
-    // app.init();
-  });
-
+  app.handleSubmit();
 });
 
 // init method
@@ -40,10 +24,10 @@ app.send = function(message) {
     type: 'POST',
     data: JSON.stringify(message),
     contentType: 'application/json',
-    success: function (data) {
+    success: function(data) {
       console.log('chatterbox: Message sent');
     },
-    error: function (data) {
+    error: function(data) {
       // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
       console.error('chatterbox: Failed to send message', data);
     }
@@ -55,19 +39,21 @@ app.fetch = function() {
   $.ajax({
     url: app.server,
     type: 'GET',
-    data: where={"order":"-createdAt","limit":"151"},
+    data: where = {
+      "order": "-createdAt",
+      "limit": "151"
+    },
     contentType: 'application/json',
-    success: function (data) {
-    console.log(data);
+    success: function(data) {
+      console.log(data);
       for (var i = 0; i < data.results.length; i++) {
         $('#chats').append('<div class="chat">' +
-                            '<div class="username">' + app.sanitize(data.results[i].username) + '</div>' +
-                            '<div class="text">' + app.sanitize(data.results[i].text) + '</div>' +
-                            '<div class="text">' + app.sanitize(data.results[i].createdAt) + '</div>' +
-                          '</div>');
+          '<div class="username">' + app.sanitize(data.results[i].username) + '</div>' +
+          '<div id="message">' + app.sanitize(data.results[i].text) + '</div>' +
+          '</div>');
       }
     },
-    error: function () {
+    error: function() {
       // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
       console.error('chatterbox: Failed to get message');
     }
@@ -75,7 +61,7 @@ app.fetch = function() {
 };
 
 // sanitize method
-app.sanitize = function (str) {
+app.sanitize = function(str) {
 
   var entityMap = {
     '&': '&amp;',
@@ -88,10 +74,10 @@ app.sanitize = function (str) {
     '=': '&#x3D;'
   };
 
-  return String(str).replace(/[&<>"'`=\/]/g, function fromEntityMap (s) {
+  return String(str).replace(/[&<>"'`=\/]/g, function fromEntityMap(s) {
     return entityMap[s];
   });
-}
+};
 
 // clearMessages method
 app.clearMessages = function() {
@@ -105,13 +91,23 @@ app.renderMessage = function(message) {
 };
 
 app.handleSubmit = function() {
+  $('#send').on("submit", function(e) {
+    e.preventDefault(); // cancel the actual submit
+    var username = app.sanitize(window.location.search.replace("?username=", ''));
+    var text = app.sanitize($('#message').val());
+    var rooms = app.sanitize($('#rooms').val());
+    console.log(text);
+    console.log(rooms);
 
-}
+    var message = {
+      username: username,
+      text: text,
+      roomname: rooms
+    };
+    console.log(message);
+    app.renderMessage(message);
+    // app.init();
+  });
+};
+
 app.init();
-
-
-
-
-
-
-
