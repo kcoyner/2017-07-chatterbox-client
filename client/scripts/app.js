@@ -1,6 +1,7 @@
 // YOUR CODE HERE:
 var app = {
-  server: 'http://parse.sfm8.hackreactor.com/chatterbox/classes/messages'
+  server: 'http://parse.sfm8.hackreactor.com/chatterbox/classes/messages',
+  friends: []
 };
 
 $(document).ready(function() {
@@ -8,6 +9,7 @@ $(document).ready(function() {
     app.clearMessages();
   });
   app.handleSubmit();
+  app.handleUsernameClick();
 });
 
 // init method
@@ -42,7 +44,7 @@ app.fetch = function() {
     type: 'GET',
     data: where = {
       "order": "-createdAt",
-      "limit": "25"
+      "limit": "15"
     },
     contentType: 'application/json',
     success: function(data) {
@@ -81,14 +83,22 @@ app.clearMessages = function() {
   $('#chats').children().remove();
 };
 
+
 // renderMessage method
 app.renderMessage = function(message) {
+  var cssClass = '';
   if (Array.isArray(message.results)) {
     for (var i = 0; i < message.results.length; i++) {
+      // bold all messages from friends
+      if (app.friends[message.results[i].username]) {
+        cssClass = 'class=bold';
+      }
       $('#chats').append('<div class="chat">' +
-          '<div class="username">' + app.sanitize(message.results[i].username) + '</div>' +
-          '<div id="message">' + app.sanitize(message.results[i].text) + '</div>' +
+          '<div class="username"><span class="userClicked">'+ app.sanitize(message.results[i].username) + '</span></div>' +
+          '<div id="message" ' + cssClass + '>' + app.sanitize(message.results[i].text) + '</div>' +
       '</div>');
+
+
     }
   } else {
     $('#chats').append('<div class="chat">' +
@@ -107,11 +117,9 @@ app.handleSubmit = function() {
     var username = app.sanitize(window.location.search.replace("?username=", ''));
     var text = app.sanitize($('#message').val());
     var rooms;
-    // check to see if id=room is empty
     if ($('#room').val()) {
       rooms = app.sanitize($('#room').val());
-    }
-    else {
+    } else {
       rooms = $( "select#roomSelect option:checked" ).val();
     }
 
@@ -126,15 +134,12 @@ app.handleSubmit = function() {
     };
     console.log(message);
     app.renderMessage(message);
-    // app.init();
   });
 };
 
 app.renderRoom = function(roomName) {
 
   $('#roomSelect').append('<option>' + roomName + '</option>');
-
-  console.log();
 };
 
 app.renderDropDown = function(data) {
@@ -146,7 +151,16 @@ app.renderDropDown = function(data) {
       app.renderRoom(data.results[i].roomname);
     }
   }
-  console.log(roomArray);
 };
+
+app.handleUsernameClick = function() {
+  $(document.body).on('click', 'span.userClicked' ,function(){
+    $('#friendList').append('<div id="friend">' + $(this).text() + '</div>');
+    $(this).parent().siblings().css('font-weight','bold');
+    app.friends.push($(this).text());
+  });
+};
+
+console.log(app.friends)
 app.init();
 

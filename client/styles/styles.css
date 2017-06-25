@@ -99,3 +99,31 @@ form input[type=text] {
 .roomInput {
     float : left;
 }
+
+#chats {
+    float: left;
+    width: 38%;
+}
+
+#friendList {
+    margin: auto;
+    text-align: left;
+    background: white;
+    padding: 50px 60px;
+    border: solid #ddd;
+    border-width: 0 1px 1px 1px;
+    width: 38%;
+    float: left;
+}
+#container {
+    width : 1200px;
+    margin: auto;
+}
+.bold {
+    font-weight: bold;
+}
+
+#friendList h3 {
+    text-align: center;
+}
+
