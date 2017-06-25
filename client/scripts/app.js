@@ -19,7 +19,6 @@ app.init = function() {
 
 // send method
 app.send = function(message) {
-
   $.ajax({
     // This is the url you should use to communicate with the parse API server.
     url: app.server,
@@ -43,8 +42,8 @@ app.fetch = function() {
     url: app.server,
     type: 'GET',
     data: where = {
-      "order": "-createdAt",
-      "limit": "15"
+      'order': '-createdAt',
+      'limit': '15'
     },
     contentType: 'application/json',
     success: function(data) {
@@ -94,51 +93,42 @@ app.renderMessage = function(message) {
         cssClass = 'class=bold';
       }
       $('#chats').append('<div class="chat">' +
-          '<div class="username"><span class="userClicked">'+ app.sanitize(message.results[i].username) + '</span></div>' +
-          '<div id="message" ' + cssClass + '>' + app.sanitize(message.results[i].text) + '</div>' +
-      '</div>');
-
-
+        '<div class="username"><span class="userClicked">' + app.sanitize(message.results[i].username) + '</span></div>' +
+        '<div id="message" ' + cssClass + '>' + app.sanitize(message.results[i].text) + '</div>' +
+        '<div id="timestamp">' + moment(message.results[i].createdAt).format('MMM Do HH:MM a') + '</div>' +
+        '</div>');
     }
   } else {
     $('#chats').append('<div class="chat">' +
-        '<div class="username">' + app.sanitize(message.username) + '</div>' +
-        '<div id="message">' + app.sanitize(message.text) + '</div>' +
-    '</div>');
+      '<div class="username">' + app.sanitize(message.username) + '</div>' +
+      '<div id="message">' + app.sanitize(message.text) + '</div>' +
+      '</div>');
     app.send(message);
   }
-
-
 };
 
 app.handleSubmit = function() {
-  $('#send').on("submit", function(e) {
+  $('#send').on('submit', function(e) {
     e.preventDefault(); // cancel the actual submit
-    var username = app.sanitize(window.location.search.replace("?username=", ''));
+    var username = app.sanitize(window.location.search.replace('?username=', ''));
     var text = app.sanitize($('#message').val());
     var rooms;
     if ($('#room').val()) {
       rooms = app.sanitize($('#room').val());
     } else {
-      rooms = $( "select#roomSelect option:checked" ).val();
+      rooms = $('select#roomSelect option:checked').val();
     }
-
-    //var rooms = app.sanitize($('#rooms').val());
-    console.log(text);
-    console.log(rooms);
 
     var message = {
       username: username,
       text: text,
       roomname: rooms
     };
-    console.log(message);
     app.renderMessage(message);
   });
 };
 
 app.renderRoom = function(roomName) {
-
   $('#roomSelect').append('<option>' + roomName + '</option>');
 };
 
@@ -154,13 +144,12 @@ app.renderDropDown = function(data) {
 };
 
 app.handleUsernameClick = function() {
-  $(document.body).on('click', 'span.userClicked' ,function(){
+  $(document.body).on('click', 'span.userClicked', function() {
     $('#friendList').append('<div id="friend">' + $(this).text() + '</div>');
-    $(this).parent().siblings().css('font-weight','bold');
+    $(this).parent().siblings().css('font-weight', 'bold');
     app.friends.push($(this).text());
   });
 };
 
-console.log(app.friends)
+console.log(app.friends);
 app.init();
-

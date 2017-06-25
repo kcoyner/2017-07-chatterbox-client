@@ -1,6 +1,5 @@
 <!doctype html>
 <html>
-
 <head>
     <meta charset="utf-8">
     <title>chatterbox</title>
@@ -8,6 +7,7 @@
 
     <!-- dependencies -->
     <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/moment/moment.js"></script>
     <script>
         // YOU DO NOT NEED TO EDIT THIS CODE
         if (!/(&|\?)username=/.test(window.location.search))
@@ -28,36 +28,39 @@
 </head>
 
 <body>
-    <div id="main">
-        <h1>chatterbox</h1>
-        <!-- Your HTML goes here! -->
-        <form name='send' id='send' method='post'>
-            <div class="clearfix">
-              <div class='roomInput'>
-                Room: <input type='text' name='room' id='room' value='' maxlength='40'>
-              </div>
-              <div>
-                  <select name='roomname' id='roomSelect'></select>
-              </div>
-            </div>
+    <div id="container">
+        <div id="main">
+            <h1>chatterbox</h1>
+            <form name='send' id='send' method='post'>
+                <div class="clearfix">
+                    <div class='roomInput'>
+                        Room: <input type='text' name='room' id='room' value=''
+                            maxlength='40'>
+                    </div>
+                    <div>
+                        <select name='roomname' id='roomSelect'></select>
+                    </div>
+                </div>
+                <br><br>
+                <div>
+                    Message: <input type='text' name='text' id='message' value=''
+                        maxlength='140'>
+                </div>
+                <div>
+                    <input type='submit' name='submit' class='submit'>
+                </div>
+            </form>
             <br><br>
             <div>
-                Message: <input type='text' name='text' id='message' value='' maxlength='140'>
+                <button id='clear' type="button">Clear Messages</button>
             </div>
-            <div>
-                <input type='submit' name='submit' class='submit'>
-            </div>
-        </form>
-        <br><br>
-        <div>
-            <button id='clear' type="button">Clear Messages</button>
         </div>
-    </div>
-    <div id="container">
-      <div id="chats"></div>
-      <div id="friendList"><h3>All My Friends</h3></div>
+        <div id="chats">
+        </div>
+        <div id="friendList">
+            <h3>All My Friends</h3>
+        </div>
     </div>
 </body>
 
 </html>
-
